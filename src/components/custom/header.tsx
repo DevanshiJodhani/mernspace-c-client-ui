@@ -5,12 +5,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Phone, ShoppingBasket } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '../ui/button';
 
 const Header = () => {
   return (
     <header className="bg-white">
-      <nav className="container mx-auto py-5 flex ">
-        <div className='flex items-center space-x-4'>
+      <nav className="container mx-auto py-5 flex justify-between items-center">
+        <div className="flex items-center space-x-4">
           <svg
             data-testid="logo"
             width="90"
@@ -32,7 +35,7 @@ const Header = () => {
           </svg>
 
           <Select>
-            <SelectTrigger className="w-[180px] focus:ring-0">
+            <SelectTrigger className="w-45 h-9 focus:ring-0">
               <SelectValue placeholder="Select Restaurant" />
             </SelectTrigger>
             <SelectContent>
@@ -41,6 +44,29 @@ const Header = () => {
               <SelectItem value="kids-corner">Kids Courner</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+        <div className="flex gap-x-4 items-center">
+          <ul className="flex items-center space-x-4 font-medium">
+            <li className="hover:text-primary">
+              <Link href={'/'}>Menu</Link>
+            </li>
+            <li className="hover:text-primary">
+              <Link href={'/'}>Orders</Link>
+            </li>
+          </ul>
+          <div className="relative">
+            <Link href={'/cart'}>
+              <ShoppingBasket className="hover:text-primary" />
+            </Link>
+            <span className="absolute -top-4 -right-5 h-6 w-6 flex items-center justify-center rounded-full bg-primary font-bold text-white">
+              3
+            </span>
+          </div>
+          <div className="flex items-center gap-x-2 ml-12">
+            <Phone />
+            <span>+91 9800 098 998</span>
+          </div>
+          <Button size={'sm'}>Logout</Button>
         </div>
       </nav>
     </header>
