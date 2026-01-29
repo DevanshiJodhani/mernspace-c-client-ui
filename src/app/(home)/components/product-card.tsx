@@ -9,6 +9,8 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import ToppingList from './topping-list';
+import { ShoppingCart } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export type Product = {
   id: string;
@@ -141,6 +143,14 @@ const ProductCard = ({ product }: PropTypes) => {
                 </div>
 
                 <ToppingList />
+
+                <div className="flex items-center justify-between mt-12">
+                  <span className="font-bold">₹{product.price}</span>
+                  <Button>
+                    <ShoppingCart />
+                    <span>Add to cart</span>
+                  </Button>
+                </div>
               </div>
             </div>
           </DialogContent>
