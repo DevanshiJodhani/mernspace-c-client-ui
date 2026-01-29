@@ -12,7 +12,7 @@ import { Button } from '../ui/button';
 const Header = () => {
   return (
     <header className="bg-white">
-      <nav className="container mx-auto py-5 flex justify-between items-center">
+      <nav className="mx-auto max-w-330 px-6 py-5 flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <svg
             data-testid="logo"

@@ -45,7 +45,7 @@ export default function Home() {
   return (
     <>
       <section className="bg-white">
-        <div className="container mx-auto flex items-center justify-between py-24">
+        <div className="mx-auto max-w-330 px-6 flex items-center justify-between py-24">
           <div>
             <h1 className="text-7xl font-black font-sans leading-snug">
               Super Delicious Pizza in <br />
@@ -69,7 +69,7 @@ export default function Home() {
         </div>
       </section>
       <section>
-        <div className="container mx-auto py-12">
+        <div className="max-w-330 px-6 mx-auto py-12">
           <Tabs defaultValue="pizza">
             <TabsList>
               <TabsTrigger value="pizza" className="text-md">
