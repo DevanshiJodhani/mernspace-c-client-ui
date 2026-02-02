@@ -17,7 +17,7 @@ const ProductModel = ({ product }: { product: Product }) => {
         <div className="flex ">
           <div className="w-1/3 bg-white rounded p-8 flex items-center justify-center">
             <Image
-              src={'/pizza-main.png'}
+              src={product.image}
               alt={product.name}
               width={450}
               height={450}
