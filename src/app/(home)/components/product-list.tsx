@@ -3,41 +3,39 @@ import { Category, Product } from '@/lib/types';
 import ProductCard from './product-card';
 
 const ProductList = async () => {
-  // todo: Add promis all
-  // Fetching Categories
-  const categoryResponse = await fetch(
-    `${process.env.BACKEND_URL}/api/catalog/categories`,
-    {
-      next: {
-        revalidate: 3600, // 1 hour
-      },
-    },
-  );
+  // Fetching Categories and Products
 
-  if (!categoryResponse.ok) {
-    throw new Error('Failed to fetch categories');
-  }
-
-  const data = await categoryResponse.json();
-  const categories: Category[] = data.categories;
-
-  // Fetching Products
-  const productsResponse = await fetch(
+  const [categoryResponse, productsResponse] = await Promise.all([
     // TODO: Add dynamic tenantId
-    `${process.env.BACKEND_URL}/api/catalog/products?perPage=100&tenantId=3`,
-
-    {
+    fetch(`${process.env.BACKEND_URL}/api/catalog/categories`, {
       next: {
         revalidate: 3600, // 1 hour
       },
-    },
-  );
+    }),
+    fetch(
+      `${process.env.BACKEND_URL}/api/catalog/products?perPage=100&tenantId=3`,
 
-  if (!productsResponse.ok) {
-    throw new Error('Failed to fetch categories');
+      {
+        next: {
+          revalidate: 3600, // 1 hour
+        },
+      },
+    ),
+  ]);
+
+  // Error handling
+  if (!categoryResponse.ok || !productsResponse.ok) {
+    throw new Error('Failed to fetch catalog data');
   }
 
-  const products: { data: Product[] } = await productsResponse.json();
+  const [categoriesData, productsData] = await Promise.all([
+    categoryResponse.json(),
+    productsResponse.json(),
+  ]);
+
+  const categories: Category[] = categoriesData.categories;
+  const products: { data: Product[] } = productsData;
+
   return (
     <section>
       <div className="max-w-330 px-6 mx-auto py-12">
