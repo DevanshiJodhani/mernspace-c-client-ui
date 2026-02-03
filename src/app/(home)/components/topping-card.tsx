@@ -18,7 +18,7 @@ const ToppingCard = ({
   handleCheckBoxCheck,
 }: PropType) => {
   const isCurrentSelected = selectedToppings.some(
-    (element) => element.id === topping.id,
+    (element) => element._id === topping._id,
   );
 
   return (

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { startTransition, useEffect, useState } from 'react';
 import ToppingCard from './topping-card';
 import { Topping } from '@/lib/types';
 
@@ -28,17 +28,19 @@ const ToppingList = () => {
 
   const handleCheckBoxCheck = (topping: Topping) => {
     const isAlreadyExists = selectedToppings.some(
-      (element: Topping) => element.id === topping.id,
+      (element: Topping) => element._id === topping._id,
     );
 
-    if (isAlreadyExists) {
-      setSelectedToppings((prev) =>
-        prev.filter((elm: Topping) => elm.id !== topping.id),
-      );
-      return;
-    }
+    startTransition(() => {
+      if (isAlreadyExists) {
+        setSelectedToppings((prev) =>
+          prev.filter((elm: Topping) => elm._id !== topping._id),
+        );
+        return;
+      }
 
-    setSelectedToppings((prev: Topping[]) => [...prev, topping]);
+      setSelectedToppings((prev: Topping[]) => [...prev, topping]);
+    });
   };
 
   return (
@@ -50,7 +52,7 @@ const ToppingList = () => {
           return (
             <ToppingCard
               topping={topping}
-              key={topping.id}
+              key={topping._id}
               selectedToppings={selectedToppings}
               handleCheckBoxCheck={handleCheckBoxCheck}
             />

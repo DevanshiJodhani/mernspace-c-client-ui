@@ -13,6 +13,7 @@ import ToppingList from './topping-list';
 import { ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/lib/types';
+import { Suspense } from 'react';
 
 const ProductModel = ({ product }: { product: Product }) => {
   const handleAddToCart = () => {
@@ -73,7 +74,9 @@ const ProductModel = ({ product }: { product: Product }) => {
               },
             )}
 
-            <ToppingList />
+            <Suspense fallback={'Topping Loading...'}>
+              <ToppingList />
+            </Suspense>
 
             <div className="flex items-center justify-between mt-12">
               <span className="font-bold">₹{100}</span>

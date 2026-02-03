@@ -8,14 +8,6 @@ import {
 import { Product } from '@/lib/types';
 import ProductModel from './product-model';
 
-// export type Product = {
-//   id: string;
-//   name: string;
-//   description: string;
-//   image: string;
-//   price: number;
-// };
-
 type PropTypes = {
   product: Product;
 };
