@@ -12,7 +12,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import ToppingList from './topping-list';
 import { ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Product } from '@/lib/types';
+import { Product, Topping } from '@/lib/types';
 import { startTransition, Suspense, useState } from 'react';
 
 type ChosenConfig = {
@@ -36,6 +36,26 @@ const ProductModel = ({ product }: { product: Product }) => {
   const handleAddToCart = () => {
     // todo: add to cart logic
     console.log('Adding to the cart....');
+  };
+
+  // Handling Topping
+  const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
+
+  const handleCheckBoxCheck = (topping: Topping) => {
+    const isAlreadyExists = selectedToppings.some(
+      (element: Topping) => element._id === topping._id,
+    );
+
+    startTransition(() => {
+      if (isAlreadyExists) {
+        setSelectedToppings((prev) =>
+          prev.filter((elm: Topping) => elm._id !== topping._id),
+        );
+        return;
+      }
+
+      setSelectedToppings((prev: Topping[]) => [...prev, topping]);
+    });
   };
 
   return (
@@ -95,7 +115,10 @@ const ProductModel = ({ product }: { product: Product }) => {
             )}
 
             <Suspense fallback={'Topping Loading...'}>
-              <ToppingList />
+              <ToppingList
+                selectedToppings={selectedToppings}
+                handleCheckBoxCheck={handleCheckBoxCheck}
+              />
             </Suspense>
 
             <div className="flex items-center justify-between mt-12">
