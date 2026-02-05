@@ -5,10 +5,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Phone, ShoppingBasket } from 'lucide-react';
+import { Phone } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { Tenant } from '@/lib/types';
+import CartCounter from './cart-counter';
 
 const Header = async () => {
   const tenantResponse = await fetch(
@@ -74,14 +75,9 @@ const Header = async () => {
               <Link href={'/'}>Orders</Link>
             </li>
           </ul>
-          <div className="relative">
-            <Link href={'/cart'}>
-              <ShoppingBasket className="hover:text-primary" />
-            </Link>
-            <span className="absolute -top-4 -right-5 h-6 w-6 flex items-center justify-center rounded-full bg-primary font-bold text-white">
-              3
-            </span>
-          </div>
+
+          <CartCounter />
+
           <div className="flex items-center gap-x-2 ml-12">
             <Phone />
             <span>+91 9800 098 998</span>
