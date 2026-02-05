@@ -9,7 +9,7 @@ import { Phone } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { Tenant } from '@/lib/types';
-import CartCounter from './cart-counter';
+import CartCounterNoSSR from './cart-counter-no-ssr';
 
 const Header = async () => {
   const tenantResponse = await fetch(
@@ -76,7 +76,7 @@ const Header = async () => {
             </li>
           </ul>
 
-          <CartCounter />
+          <CartCounterNoSSR />
 
           <div className="flex items-center gap-x-2 ml-12">
             <Phone />
