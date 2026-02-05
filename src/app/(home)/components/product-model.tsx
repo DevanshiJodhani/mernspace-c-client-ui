@@ -24,7 +24,17 @@ type ChosenConfig = {
 const ProductModel = ({ product }: { product: Product }) => {
   const dispatch = useAppDispatch();
 
-  const [chosenConfig, setChosenConfig] = useState<ChosenConfig>();
+  const defaultConfiguration = Object.entries(
+    product.category.priceConfiguration,
+  )
+    .map(([key, value]) => {
+      return { [key]: value.availableOptions[0] };
+    })
+    .reduce((acc, curr) => ({ ...acc, ...curr }), {});
+
+  const [chosenConfig, setChosenConfig] = useState<ChosenConfig>(
+    defaultConfiguration as unknown as ChosenConfig,
+  );
 
   const handleRadioChange = (key: string, data: string) => {
     startTransition(() => {
