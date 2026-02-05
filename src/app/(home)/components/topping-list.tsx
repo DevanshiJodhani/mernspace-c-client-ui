@@ -13,16 +13,12 @@ const ToppingList = () => {
       );
 
       const toppings = await toppingResponse.json();
-      console.log('RAW API RESPONSE:', toppings);
-      console.log('Is array?', Array.isArray(toppings));
 
       setToppings(toppings.data);
     };
 
     fetchData();
   }, []);
-
-  console.log('Toppings', toppings);
 
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
 
