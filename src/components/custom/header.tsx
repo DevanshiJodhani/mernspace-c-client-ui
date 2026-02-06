@@ -1,15 +1,9 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Phone } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { Tenant } from '@/lib/types';
 import CartCounterNoSSR from './cart-counter-no-ssr';
+import TenantSelect from './tenant-select';
 
 const Header = async () => {
   const tenantResponse = await fetch(
@@ -51,20 +45,7 @@ const Header = async () => {
             />
           </svg>
 
-          <Select>
-            <SelectTrigger className="w-45 h-9 focus:ring-0">
-              <SelectValue placeholder="Select Restaurant" />
-            </SelectTrigger>
-            <SelectContent>
-              {restaurants.data.map((restaurant) => {
-                return (
-                  <SelectItem key={restaurant.id} value={restaurant.id}>
-                    {restaurant.name}
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
+          <TenantSelect restaurants={restaurants} />
         </div>
         <div className="flex gap-x-4 items-center">
           <ul className="flex items-center space-x-4 font-medium">

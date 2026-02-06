@@ -2,8 +2,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Category, Product } from '@/lib/types';
 import ProductCard from './product-card';
 
-const ProductList = async () => {
-  // Fetching Categories and Products
+const ProductList = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ restaurantId?: string }>;
+}) => {
+  const params = await searchParams;
+  const restaurantId = params.restaurantId;
+
+  console.log('restaurantId:', restaurantId);
 
   const [categoryResponse, productsResponse] = await Promise.all([
     // TODO: Add dynamic tenantId
@@ -13,7 +20,7 @@ const ProductList = async () => {
       },
     }),
     fetch(
-      `${process.env.BACKEND_URL}/api/catalog/products?perPage=100&tenantId=3`,
+      `${process.env.BACKEND_URL}/api/catalog/products?perPage=100&tenantId=${restaurantId}`,
 
       {
         next: {
