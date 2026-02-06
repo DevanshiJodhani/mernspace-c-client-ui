@@ -13,7 +13,7 @@ import ToppingList from './topping-list';
 import { ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Product, Topping } from '@/lib/types';
-import { startTransition, Suspense, useState } from 'react';
+import { startTransition, Suspense, useMemo, useState } from 'react';
 import { useAppDispatch } from '@/lib/store/hooks';
 import { addToCart } from '@/lib/store/features/cart/cartSlice';
 
@@ -62,6 +62,23 @@ const ProductModel = ({ product }: { product: Product }) => {
 
   // Handling Topping
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
+
+  const totalPrice = useMemo(() => {
+    const toppingsTotal = selectedToppings.reduce(
+      (acc, curr) => acc + curr.price,
+      0,
+    );
+
+    const configPricing = Object.entries(chosenConfig).reduce(
+      (acc, [key, value]: [string, string]) => {
+        const price = product.priceConfiguration[key].availableOptions[value];
+        return acc + price;
+      },
+      0,
+    );
+
+    return configPricing + toppingsTotal;
+  }, [chosenConfig, selectedToppings, product]);
 
   const handleCheckBoxCheck = (topping: Topping) => {
     const isAlreadyExists = selectedToppings.some(
@@ -144,7 +161,7 @@ const ProductModel = ({ product }: { product: Product }) => {
             </Suspense>
 
             <div className="flex items-center justify-between mt-12">
-              <span className="font-bold">₹{100}</span>
+              <span className="font-bold">₹{totalPrice}</span>
               <Button onClick={() => handleAddToCart(product)}>
                 <ShoppingCart />
                 <span>Add to cart</span>
