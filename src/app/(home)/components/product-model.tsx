@@ -66,6 +66,7 @@ const ProductModel = ({ product }: { product: Product }) => {
     };
 
     dispatch(addToCart(itemToAdd));
+    setSelectedToppings([]);
     setDialogOpen(false);
   };
 
