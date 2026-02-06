@@ -3,6 +3,7 @@ import { Manrope } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/custom/header';
 import StoreProvider from './StoreProvider';
+import { Toaster } from '@/components/ui/sonner';
 
 const manrope = Manrope({
   variable: '--font-manrope',
@@ -27,6 +28,7 @@ export default function RootLayout({
           <Header />
 
           <main>{children}</main>
+          <Toaster richColors position="top-center" />
         </body>
       </StoreProvider>
     </html>
