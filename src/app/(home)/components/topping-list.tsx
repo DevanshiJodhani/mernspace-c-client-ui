@@ -26,7 +26,7 @@ const ToppingList = ({
     };
 
     fetchData();
-  }, []);
+  }, [searchParams]);
 
   return (
     <section className="mt-6">
