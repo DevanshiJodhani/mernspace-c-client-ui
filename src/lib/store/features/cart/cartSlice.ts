@@ -1,7 +1,6 @@
 import { Product, Topping } from '@/lib/types';
 import { hashTheItem } from '@/lib/utils';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { stat } from 'fs';
 
 export interface CartItem
   extends Pick<Product, '_id' | 'name' | 'image' | 'priceConfiguration'> {
