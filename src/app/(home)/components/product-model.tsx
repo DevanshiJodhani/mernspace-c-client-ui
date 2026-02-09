@@ -16,7 +16,7 @@ import { Product, Topping } from '@/lib/types';
 import { startTransition, Suspense, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { addToCart, CartItem } from '@/lib/store/features/cart/cartSlice';
-import { hashTheItem } from '@/lib/utils';
+import { getItemTotal, hashTheItem } from '@/lib/utils';
 import { toast } from 'sonner';
 
 type ChosenConfig = {
@@ -83,21 +83,20 @@ const ProductModel = ({ product }: { product: Product }) => {
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
 
   const totalPrice = useMemo(() => {
-    const toppingsTotal = selectedToppings.reduce(
-      (acc, curr) => acc + curr.price,
-      0,
-    );
-
-    const configPricing = Object.entries(chosenConfig).reduce(
-      (acc, [key, value]: [string, string]) => {
-        const price = product.priceConfiguration[key].availableOptions[value];
-        return acc + price;
+    const tempItem: CartItem = {
+      _id: product._id,
+      name: product.name,
+      image: product.image,
+      priceConfiguration: product.priceConfiguration,
+      chosenConfiguration: {
+        priceConfiguration: chosenConfig,
+        selectedToppings: selectedToppings,
       },
-      0,
-    );
+      qty: 1,
+    };
 
-    return configPricing + toppingsTotal;
-  }, [chosenConfig, selectedToppings, product]);
+    return getItemTotal(tempItem);
+  }, [product, chosenConfig, selectedToppings]);
 
   const alreadyHasInCart = useMemo(() => {
     const currentConfiguration = {
