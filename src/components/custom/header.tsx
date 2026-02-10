@@ -5,6 +5,7 @@ import { Tenant } from '@/lib/types';
 import CartCounterNoSSR from './cart-counter-no-ssr';
 import TenantSelect from './tenant-select';
 import { getSession } from '@/lib/session';
+import Logout from './logout';
 
 const Header = async () => {
   const session = await getSession();
@@ -67,7 +68,12 @@ const Header = async () => {
             <span>+91 9800 098 998</span>
           </div>
 
-          <Button size={'sm'}>{session ? 'Logout' : 'Login'}</Button>
+          {session ?
+            <Logout />
+          : <Button size={'sm'} asChild>
+              <Link href="/login">Login</Link>
+            </Button>
+          }
         </div>
       </nav>
     </header>
