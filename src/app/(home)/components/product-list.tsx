@@ -10,8 +10,6 @@ const ProductList = async ({
   const params = await searchParams;
   const restaurantId = params.restaurantId;
 
-  console.log('restaurantId:', restaurantId);
-
   const [categoryResponse, productsResponse] = await Promise.all([
     // TODO: Add dynamic tenantId
     fetch(`${process.env.BACKEND_URL}/api/catalog/categories`, {
