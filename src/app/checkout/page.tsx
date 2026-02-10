@@ -17,7 +17,7 @@ import { Coins, CreditCard, Plus } from 'lucide-react';
 
 const Checkout = () => {
   return (
-    <div className="flex mx-auto max-w-330 px-6 py-5 gap-6 mt-16">
+    <div className="flex mx-auto max-w-330 px-6 py-5 gap-6 ">
       <Card className="w-3/5 border-none">
         <CardHeader>
           <CardTitle>Customer Details</CardTitle>
