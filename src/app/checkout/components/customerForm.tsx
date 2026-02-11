@@ -123,25 +123,6 @@ const CustomerForm = () => {
                       </Card>
                     );
                   })}
-
-                  {/* <Card className="p-6">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="option-one" id="option-one" />
-                      <Label htmlFor="option-one" className="leading-normal">
-                        123, ABC Street, Malad West, Mumbai, Maharashtra, India
-                        400064
-                      </Label>
-                    </div>
-                  </Card>
-                  <Card className="p-6">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="option-two" id="option-two" />
-                      <Label htmlFor="option-two" className="leading-normal">
-                        Flat No. 501, Sunshine Apartments, Andheri East, Mumbai,
-                        Maharashtra, India 400069
-                      </Label>
-                    </div>
-                  </Card> */}
                 </RadioGroup>
               </div>
             </div>
