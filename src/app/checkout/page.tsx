@@ -22,12 +22,17 @@ const Checkout = async ({
 }: {
   searchParams: Promise<{ restaurantId?: string }>;
 }) => {
-  const queryString = (await searchParams).restaurantId;
+  const params = await searchParams;
+
+  const sParams = new URLSearchParams(params as Record<string, string>);
+  const existingQueryString = sParams.toString();
+
+  sParams.append('return-to', `/checkout?${existingQueryString}`);
 
   const session = await getSession();
 
   if (!session) {
-    redirect(`/login?${queryString}`);
+    redirect(`/login?${sParams.toString()}`);
   }
 
   return (
