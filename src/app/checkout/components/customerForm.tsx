@@ -15,9 +15,27 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
-import { Coins, CreditCard, Plus } from 'lucide-react';
+import { getCustomer } from '@/lib/http/api';
+import { useQuery } from '@tanstack/react-query';
+import { Coins, CreditCard, Loader, Plus } from 'lucide-react';
 
 const CustomerForm = () => {
+  const { data: customer, isLoading } = useQuery({
+    queryKey: ['customer'],
+    queryFn: async () => {
+      return await getCustomer().then((res) => res.data);
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center gap-2">
+        <Loader className="animate-spin" />
+        <span>Loading...</span>
+      </div>
+    );
+  }
+
   return (
     <div className="flex mx-auto max-w-330 px-6 py-5 gap-6 ">
       <Card className="w-3/5 border-none">
@@ -29,28 +47,31 @@ const CustomerForm = () => {
             <div className="grid gap-3">
               <Label htmlFor="fname">First Name</Label>
               <Input
+                disabled
                 id="fname"
                 type="text"
                 className="w-full"
-                defaultValue=""
+                defaultValue={customer?.firstName}
               />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="lname">Last Name</Label>
               <Input
+                disabled
                 id="lname"
                 type="text"
                 className="w-full"
-                defaultValue=""
+                defaultValue={customer?.lastName}
               />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="email">Email</Label>
               <Input
+                disabled
                 id="email"
                 type="text"
                 className="w-full"
-                defaultValue=""
+                defaultValue={customer?.email}
               />
             </div>
 
