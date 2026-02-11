@@ -17,11 +17,17 @@ import { getSession } from '@/lib/session';
 import { Coins, CreditCard, Plus } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
-const Checkout = async () => {
+const Checkout = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ restaurantId?: string }>;
+}) => {
+  const queryString = (await searchParams).restaurantId;
+
   const session = await getSession();
 
   if (!session) {
-    redirect('/login');
+    redirect(`/login?${queryString}`);
   }
 
   return (
