@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs */
 'use client';
 
 import z from 'zod';
@@ -22,6 +23,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import OrderSummary from './orderSummary';
+import { useAppSelector } from '@/lib/store/hooks';
+import { useSearchParams } from 'next/navigation';
+import { useRef } from 'react';
 
 const formSchema = z.object({
   address: z.string(),
@@ -33,6 +37,11 @@ const CustomerForm = () => {
   const customerForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+
+  const searchParam = useSearchParams();
+
+  const chosenCouponCode = useRef('');
+  const cart = useAppSelector((state) => state.cart);
 
   const { data: customer, isLoading } = useQuery<Customer>({
     queryKey: ['customer'],
@@ -51,7 +60,22 @@ const CustomerForm = () => {
   }
 
   const handlePlaceOrder = (data: z.infer<typeof formSchema>) => {
-    console.log('data: ', data);
+    const tenantId = searchParam.get('restaurantId');
+    if (!tenantId) {
+      alert('Restaurant Id is required!');
+      return;
+    }
+    const orderData = {
+      cart: cart.cartItems,
+      couponCode: chosenCouponCode.current ? chosenCouponCode.current : '',
+      tenantId: tenantId,
+      customerId: customer?._id,
+      comment: data.comment,
+      address: data.address,
+      paymentMode: data.paymentMode,
+    };
+
+    console.log('Data', orderData);
   };
 
   return (
@@ -215,7 +239,11 @@ const CustomerForm = () => {
             </CardContent>
           </Card>
 
-          <OrderSummary />
+          <OrderSummary
+            handleCouponCodeChange={(code) => {
+              chosenCouponCode.current = code;
+            }}
+          />
         </div>
       </form>
     </Form>

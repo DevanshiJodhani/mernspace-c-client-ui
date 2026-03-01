@@ -12,7 +12,11 @@ import { CouponCodeData } from '@/lib/types';
 const TAXES_PERCENTAGE = 18;
 const DELIVERY_CHARGES = 100;
 
-const OrderSummary = () => {
+const OrderSummary = ({
+  handleCouponCodeChange,
+}: {
+  handleCouponCodeChange: (code: string) => void;
+}) => {
   const searchParams = useSearchParams();
 
   const cart = useAppSelector((state) => state.cart.cartItems);
@@ -70,11 +74,15 @@ const OrderSummary = () => {
 
       if (data.valid) {
         setDiscountError('');
+        handleCouponCodeChange(
+          couponCodeRef.current ? couponCodeRef.current.value : '',
+        );
         setDiscountPercentage(data.discount);
         return;
       }
 
       setDiscountError('Coupon is invaid');
+      handleCouponCodeChange('');
       setDiscountPercentage(0);
     },
   });
