@@ -46,7 +46,7 @@ const SingleOrder = async ({
           <CardDescription>Track the order status. </CardDescription>
         </CardHeader>
         <CardContent>
-          <OrderStatus />
+          <OrderStatus orderId={order._id} />
         </CardContent>
       </Card>
 
