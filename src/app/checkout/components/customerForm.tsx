@@ -23,9 +23,10 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import OrderSummary from './orderSummary';
-import { useAppSelector } from '@/lib/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { useSearchParams } from 'next/navigation';
 import { useRef } from 'react';
+import { clearCart } from '@/lib/store/features/cart/cartSlice';
 
 const formSchema = z.object({
   address: z.string(),
@@ -34,6 +35,8 @@ const formSchema = z.object({
 });
 
 const CustomerForm = () => {
+  const dispatch = useAppDispatch();
+
   const customerForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -69,6 +72,7 @@ const CustomerForm = () => {
       }
 
       alert('Order placed successfully!');
+      dispatch(clearCart());
     },
   });
 
