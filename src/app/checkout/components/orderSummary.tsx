@@ -8,13 +8,16 @@ import { useMutation } from '@tanstack/react-query';
 import { verifyCoupon } from '@/lib/http/api';
 import { useSearchParams } from 'next/navigation';
 import { CouponCodeData } from '@/lib/types';
+import { Loader } from 'lucide-react';
 
 const TAXES_PERCENTAGE = 18;
 const DELIVERY_CHARGES = 100;
 
 const OrderSummary = ({
+  isPlaceOrderPending,
   handleCouponCodeChange,
 }: {
+  isPlaceOrderPending: boolean;
   handleCouponCodeChange: (code: string) => void;
 }) => {
   const searchParams = useSearchParams();
@@ -148,7 +151,14 @@ const OrderSummary = ({
         </div>
 
         <div className="text-right mt-6">
-          <Button>Place order</Button>
+          <Button disabled={isPlaceOrderPending}>
+            {isPlaceOrderPending ?
+              <span className="flex items-center gap-2">
+                <Loader className="animate-spin" />
+                <span>Please wait...</span>
+              </span>
+            : <span>Place order</span>}
+          </Button>
         </div>
       </CardContent>
     </Card>

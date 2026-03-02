@@ -2,10 +2,11 @@
 'use client';
 
 import z from 'zod';
+import { v4 as uuidv4 } from 'uuid';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getCustomer } from '@/lib/http/api';
-import { useQuery } from '@tanstack/react-query';
+import { createOrder, getCustomer } from '@/lib/http/api';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Coins, CreditCard, Loader } from 'lucide-react';
 import AddAddress from './addAddress';
 import { Button } from '@/components/ui/button';
@@ -14,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
-import { Customer } from '@/lib/types';
+import { Customer, OrderData } from '@/lib/types';
 import {
   Form,
   FormControl,
@@ -41,6 +42,8 @@ const CustomerForm = () => {
   const searchParam = useSearchParams();
 
   const chosenCouponCode = useRef('');
+  const idempotencyKeyRef = useRef('');
+
   const cart = useAppSelector((state) => state.cart);
 
   const { data: customer, isLoading } = useQuery<Customer>({
@@ -48,6 +51,19 @@ const CustomerForm = () => {
     queryFn: async () => {
       return await getCustomer().then((res) => res.data);
     },
+  });
+
+  const { mutate, isPending: isPlaceOrderPending } = useMutation({
+    mutationKey: ['order'],
+    mutationFn: async (data: OrderData) => {
+      const idempotencyKey =
+        idempotencyKeyRef.current ?
+          idempotencyKeyRef.current
+        : (idempotencyKeyRef.current = uuidv4() + customer?._id);
+
+      await createOrder(data, idempotencyKey);
+    },
+    retry: 3,
   });
 
   if (isLoading) {
@@ -65,17 +81,17 @@ const CustomerForm = () => {
       alert('Restaurant Id is required!');
       return;
     }
-    const orderData = {
+    const orderData: OrderData = {
       cart: cart.cartItems,
       couponCode: chosenCouponCode.current ? chosenCouponCode.current : '',
       tenantId: tenantId,
-      customerId: customer?._id,
+      customerId: customer ? customer._id : '',
       comment: data.comment,
       address: data.address,
       paymentMode: data.paymentMode,
     };
 
-    console.log('Data', orderData);
+    mutate(orderData);
   };
 
   return (
@@ -240,6 +256,7 @@ const CustomerForm = () => {
           </Card>
 
           <OrderSummary
+            isPlaceOrderPending={isPlaceOrderPending}
             handleCouponCodeChange={(code) => {
               chosenCouponCode.current = code;
             }}
