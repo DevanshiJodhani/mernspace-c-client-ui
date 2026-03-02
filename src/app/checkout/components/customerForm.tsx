@@ -9,7 +9,6 @@ import { createOrder, getCustomer } from '@/lib/http/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Coins, CreditCard, Loader } from 'lucide-react';
 import AddAddress from './addAddress';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -61,9 +60,16 @@ const CustomerForm = () => {
           idempotencyKeyRef.current
         : (idempotencyKeyRef.current = uuidv4() + customer?._id);
 
-      await createOrder(data, idempotencyKey);
+      return await createOrder(data, idempotencyKey).then((res) => res.data);
     },
     retry: 3,
+    onSuccess: (data: { paymentUrl: string | null }) => {
+      if (data.paymentUrl) {
+        window.location.href = data.paymentUrl;
+      }
+
+      alert('Order placed successfully!');
+    },
   });
 
   if (isLoading) {
