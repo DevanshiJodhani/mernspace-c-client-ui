@@ -5,7 +5,13 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle2, CircleX, LayoutDashboard, Store } from 'lucide-react';
+import {
+  ArrowLeft,
+  CheckCircle2,
+  CircleX,
+  LayoutDashboard,
+  Store,
+} from 'lucide-react';
 import Link from 'next/link';
 
 const Payment = () => {
@@ -13,6 +19,7 @@ const Payment = () => {
 
   const success = searchParams.get('success');
   const orderId = searchParams.get('orderId');
+  const restaurantId = searchParams.get('restaurantId');
 
   const isOrderSuccess = success === 'true';
 
@@ -55,7 +62,9 @@ const Payment = () => {
             <div className="flex items-center gap-2">
               <LayoutDashboard size={20} />
               <h2 className="text-base font-medium">Order reference:</h2>
-              <Link href={`/order-status/${orderId}`} className="underline">
+              <Link
+                href={`/order-status/${orderId}?restaurantId=${restaurantId}`}
+                className="underline">
                 {orderId}
               </Link>
             </div>
@@ -65,10 +74,14 @@ const Payment = () => {
 
       {isOrderSuccess && orderId ?
         <Button asChild className="mt-6">
-          <Link href={`/order-status/${orderId}`}>Go to order status page</Link>
+          <Link href={`/order-status/${orderId}?restaurantId=${restaurantId}`}>
+            Go to order status page
+          </Link>
         </Button>
       : <Button asChild className="mt-6">
-          <Link href="/checkout">Go to checkout</Link>
+          <Link href={`/checkout?restaurantId=${restaurantId}`}>
+            Go to checkout
+          </Link>
         </Button>
       }
     </div>
