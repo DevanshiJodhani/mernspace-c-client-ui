@@ -69,6 +69,7 @@ const CustomerForm = () => {
     onSuccess: (data: { paymentUrl: string | null }) => {
       if (data.paymentUrl) {
         window.location.href = data.paymentUrl;
+        return;
       }
 
       alert('Order placed successfully!');
