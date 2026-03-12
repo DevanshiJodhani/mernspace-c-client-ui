@@ -10,15 +10,20 @@ import { Separator } from '@/components/ui/separator';
 import { Banknote, Coins, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 const SingleOrder = async ({
   params,
 }: {
   params: Promise<{ orderId: string }>;
 }) => {
-  const { orderId } = await params; // 🔥 IMPORTANT
+  const { orderId } = await params;
 
   const token = (await cookies()).get('accessToken')?.value;
+
+  if (!token) {
+    redirect(`/login?return-to=/order/${orderId}`);
+  }
 
   const response = await fetch(
     `${process.env.BACKEND_URL}/api/order/orders/${orderId}`,
@@ -29,7 +34,6 @@ const SingleOrder = async ({
       cache: 'no-store',
     },
   );
-
   if (!response.ok) {
     const text = await response.text();
     console.log('ERROR RESPONSE:', text);
