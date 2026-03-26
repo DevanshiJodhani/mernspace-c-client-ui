@@ -31,10 +31,10 @@ export async function POST() {
   const parsedRefreshToken = cookie.parse(refreshToken);
 
   if (!parsedAccessToke.accessToken || !parsedRefreshToken.refreshToken) {
-    return {
-      type: 'error',
-      message: 'Invalid token cookies received!',
-    };
+    return Response.json(
+        { success: false, message: 'Invalid token cookies received' },
+        { status: 400 },
+      );
   }
 
   const cookieStore = await cookies();
