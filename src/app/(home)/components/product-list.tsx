@@ -14,7 +14,7 @@ const ProductList = async ({
     // TODO: Add dynamic tenantId
     fetch(`${process.env.BACKEND_URL}/api/catalog/categories`, {
       next: {
-        revalidate: 3600, // 1 hour
+        revalidate: 120, // 2 min
       },
     }),
     fetch(
@@ -22,7 +22,7 @@ const ProductList = async ({
 
       {
         next: {
-          revalidate: 3600, // 1 hour
+          revalidate: 120, // 2 min
         },
       },
     ),

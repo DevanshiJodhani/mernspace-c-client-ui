@@ -14,7 +14,7 @@ const Header = async () => {
     `${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`,
     {
       next: {
-        revalidate: 3600, // 1 hour
+        revalidate: 120, // 2 min
       },
     },
   );
