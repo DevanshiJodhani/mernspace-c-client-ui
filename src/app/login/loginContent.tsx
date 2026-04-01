@@ -5,18 +5,14 @@ import { Label } from '@/components/ui/label';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { useFormState, useFormStatus } from 'react-dom';
-import login from '@/lib/actions/login';
 import { Loader } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-const SubmitButton = () => {
-  const { pending } = useFormStatus();
-
+const SubmitButton = ({ loading }: { loading: boolean }) => {
   return (
-    <Button>
-      {pending ?
+    <Button type="submit" disabled={loading}>
+      {loading ?
         <div className="flex items-center gap-2">
           <Loader className="animate-spin" />
           <span>Please wait</span>
@@ -26,23 +22,59 @@ const SubmitButton = () => {
   );
 };
 
-const initialState = {
-  type: '',
-  message: '',
-};
-
 export default function LoginClient() {
   const searchParams = useSearchParams();
   const returnTo = searchParams.get('return-to');
 
-  const [state, formAction] = useFormState(login, initialState);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [type, setType] = useState('');
 
-  // ✅ FIXED: safe redirect
   useEffect(() => {
-    if (state.type === 'success') {
+    if (type === 'success') {
       window.location.href = returnTo ? returnTo : '/';
     }
-  }, [state, returnTo]);
+  }, [type, returnTo]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    setLoading(true);
+    setMessage('');
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get('email');
+    const password = formData.get('password');
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/auth/login`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+          credentials: 'include',
+        },
+      );
+
+      if (!res.ok) {
+        const error = await res.json();
+        setType('error');
+        setMessage(error.errors?.[0]?.msg || 'Login failed');
+        return;
+      }
+
+      setType('success');
+      setMessage('Login successful!');
+    } catch {
+      setType('error');
+      setMessage('Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="w-full lg:grid lg:min-h-150 lg:grid-cols-2 xl:min-h-200">
@@ -52,9 +84,9 @@ export default function LoginClient() {
             <p
               aria-live="polite"
               className={`${
-                state.type === 'error' ? 'text-red-500' : 'text-green-500'
+                type === 'error' ? 'text-red-500' : 'text-green-500'
               }`}>
-              {state.message}
+              {message}
             </p>
             <h1 className="text-3xl font-bold">Login</h1>
             <p className="text-balance text-muted-foreground">
@@ -62,7 +94,7 @@ export default function LoginClient() {
             </p>
           </div>
 
-          <form action={formAction}>
+          <form onSubmit={handleSubmit}>
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
@@ -87,7 +119,7 @@ export default function LoginClient() {
                 <Input id="password" name="password" type="password" required />
               </div>
 
-              <SubmitButton />
+              <SubmitButton loading={loading} />
             </div>
           </form>
 
