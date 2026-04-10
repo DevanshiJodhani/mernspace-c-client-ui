@@ -17,16 +17,14 @@ import {
 import Link from 'next/link';
 import { Order, OrderData } from '@/lib/types';
 import { cookies } from 'next/headers';
+import { fetchServerApi } from '@/lib/server-api';
 
 const Orders = async () => {
-  const response = await fetch(
-    `${process.env.BACKEND_URL}/api/order/orders/mine`,
-    {
-      headers: {
-        Authorization: `Bearer ${(await cookies()).get('accessToken')?.value}`,
-      },
+  const response = await fetchServerApi('/api/order/orders/mine', {
+    headers: {
+      Authorization: `Bearer ${(await cookies()).get('accessToken')?.value}`,
     },
-  );
+  });
 
   if (!response.ok) {
     throw new Error('Error Fetching my order.');

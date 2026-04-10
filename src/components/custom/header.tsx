@@ -2,6 +2,7 @@ import { Phone } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { Tenant } from '@/lib/types';
+import { fetchServerApi } from '@/lib/server-api';
 import CartCounterNoSSR from './cart-counter-no-ssr';
 import TenantSelect from './tenant-select';
 import { getSession } from '@/lib/session';
@@ -10,20 +11,20 @@ import Logout from './logout';
 const Header = async () => {
   const session = await getSession();
 
-  const tenantResponse = await fetch(
-    `${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`,
-    {
-      next: {
-        revalidate: 120, // 2 min
-      },
+  const tenantResponse = await fetchServerApi('/api/auth/tenants?perPage=100', {
+    next: {
+      revalidate: 120, // 2 min
     },
-  );
+  });
 
   if (!tenantResponse.ok) {
     throw new Error('Failed to fetch tenants');
   }
 
-  const restaurants: { data: Tenant[] } = await tenantResponse.json();
+  const tenantData = await tenantResponse.json();
+  const restaurants: { data: Tenant[] } = {
+    data: Array.isArray(tenantData.data) ? tenantData.data : [],
+  };
 
   return (
     <header className="bg-white">

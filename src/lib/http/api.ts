@@ -2,7 +2,7 @@ import axios from 'axios';
 import { CouponCodeData, OrderData } from '../types';
 
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+  // Keep browser calls on the app origin so auth cookies stay usable.
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

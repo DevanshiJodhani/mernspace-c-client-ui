@@ -1,18 +1,16 @@
 'use server';
 
 import { cookies } from 'next/headers';
+import { fetchServerApi } from '../server-api';
 
 export const logout = async () => {
-  const response = await fetch(
-    `${process.env.BACKEND_URL}/api/auth/auth/logout`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${(await cookies()).get('accessToken')?.value}`,
-        cookie: `refreshToken=${(await cookies()).get('refreshToken')?.value}`,
-      },
+  const response = await fetchServerApi('/api/auth/auth/logout', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${(await cookies()).get('accessToken')?.value}`,
+      cookie: `refreshToken=${(await cookies()).get('refreshToken')?.value}`,
     },
-  );
+  });
 
   if (!response.ok) {
     console.log('Logout Failed!', response.status);

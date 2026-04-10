@@ -16,11 +16,18 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
     if (isLocalStorageAvailable) {
       const cartItems = window.localStorage.getItem('cartItems');
       try {
-        const parsedItems = JSON.parse(cartItems as string);
+        if (cartItems) {
+          const parsedItems = JSON.parse(cartItems);
 
-        storeRef.current.dispatch(setInitialCartItems(parsedItems));
+          if (Array.isArray(parsedItems)) {
+            storeRef.current.dispatch(setInitialCartItems(parsedItems));
+          } else {
+            window.localStorage.removeItem('cartItems');
+          }
+        }
       } catch (err) {
         console.error(err);
+        window.localStorage.removeItem('cartItems');
       }
     }
   }

@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { fetchServerApi } from './server-api';
 
 interface Session {
   user: User;
@@ -18,14 +19,17 @@ export const getSession = async () => {
 };
 
 const getSelf = async (): Promise<Session | null> => {
-  const response = await fetch(
-    `${process.env.BACKEND_URL}/api/auth/auth/self`,
-    {
-      headers: {
-        Authorization: `Bearer ${(await cookies()).get('accessToken')?.value}`,
-      },
+  const accessToken = (await cookies()).get('accessToken')?.value;
+
+  if (!accessToken) {
+    return null;
+  }
+
+  const response = await fetchServerApi('/api/auth/auth/self', {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
     },
-  );
+  });
 
   if (!response.ok) {
     return null;

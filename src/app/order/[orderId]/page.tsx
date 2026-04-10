@@ -11,6 +11,7 @@ import { Banknote, Coins, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { fetchServerApi } from '@/lib/server-api';
 
 const SingleOrder = async ({
   params,
@@ -25,15 +26,12 @@ const SingleOrder = async ({
     redirect(`/login?return-to=/order/${orderId}`);
   }
 
-  const response = await fetch(
-    `${process.env.BACKEND_URL}/api/order/orders/${orderId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      cache: 'no-store',
+  const response = await fetchServerApi(`/api/order/orders/${orderId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
-  );
+    cache: 'no-store',
+  });
   if (!response.ok) {
     const text = await response.text();
     console.log('ERROR RESPONSE:', text);
